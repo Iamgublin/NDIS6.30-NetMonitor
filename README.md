@@ -15,3 +15,6 @@
 ![效果图](https://github.com/Iamgublin/NDIS6.30-NetMonitor/blob/master/NDIS%206.30/内网扫描与攻击.png)
 
 2017年5月25日：修复了IP扫描BUG
+
+
+2017年9月24日：修改了PacketInfo的结构，与底层的结构统一了，同时修复了一个驱动bug

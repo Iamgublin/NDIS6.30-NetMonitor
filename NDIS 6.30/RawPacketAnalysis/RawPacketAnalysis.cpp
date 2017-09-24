@@ -10,45 +10,45 @@ VOID analysis(MAC macpacket)
 }
 void AnalyseDhcp(PPacketInfo Info, int IpHeaderLen)
 {
-	memcpy(&Info->protocol2.Dhcp, Info->RawPacket + sizeof(MAC) + IpHeaderLen + sizeof(UDPPacket), sizeof(DHCPPacket));
+	//memcpy(&Info->Osi.protocol2.Dhcp, Info->RawPacket + sizeof(MAC) + IpHeaderLen + sizeof(UDPPacket), sizeof(DHCPPacket));
 }
 void AnalyseQicq(PPacketInfo Info, int IpHeaderLen)
 {
-	memcpy(&Info->protocol2.Qicq, Info->RawPacket + sizeof(MAC) + IpHeaderLen + sizeof(UDPPacket), sizeof(QICQPacket));
+	//memcpy(&Info->Osi.protocol2.Qicq, Info->RawPacket + sizeof(MAC) + IpHeaderLen + sizeof(UDPPacket), sizeof(QICQPacket));
 }
 void AnalyseIgmp(PPacketInfo Info, int IpHeaderLen)
 {
-	memcpy(&Info->protocol1.Igmp, Info->RawPacket + sizeof(MAC) + IpHeaderLen, sizeof(IGMPPacket));
+	//memcpy(&Info->Osi.protocol1.Igmp, Info->RawPacket + sizeof(MAC) + IpHeaderLen, sizeof(IGMPPacket));
 }
 void AnalyseUdp(PPacketInfo Info, int IpHeaderLen)
 {
-	memcpy(&Info->protocol1.Udp, Info->RawPacket + sizeof(MAC) + IpHeaderLen, sizeof(UDPPacket));
-	if (Tranverse16(Info->protocol1.Udp.sourcePort == 4009) || Tranverse16(Info->protocol1.Udp.sourcePort == 8000))
+	//memcpy(&Info->Osi.protocol1.Udp, Info->RawPacket + sizeof(MAC) + IpHeaderLen, sizeof(UDPPacket));
+	if (Tranverse16(Info->Osi.protocol1.Udp.sourcePort == 4009) || Tranverse16(Info->Osi.protocol1.Udp.sourcePort == 8000))
 	{
 		SET_INFO_TYPE(Info, INFO_QICQ);
 		AnalyseQicq(Info, IpHeaderLen);
 	}
-	else if (Tranverse16(Info->protocol1.Udp.sourcePort==67)|| Tranverse16(Info->protocol1.Udp.sourcePort==68))
+	else if (Tranverse16(Info->Osi.protocol1.Udp.sourcePort==67)|| Tranverse16(Info->Osi.protocol1.Udp.sourcePort==68))
 	{
 		SET_INFO_TYPE(Info, INFO_DHCP);
 		AnalyseDhcp(Info, IpHeaderLen);
 	}
-	else if (Tranverse16(Info->protocol1.Udp.sourcePort) == 123 || Tranverse16(Info->protocol1.Udp.destinationPort) == 123)
+	else if (Tranverse16(Info->Osi.protocol1.Udp.sourcePort) == 123 || Tranverse16(Info->Osi.protocol1.Udp.destinationPort) == 123)
 	{
 		SET_INFO_TYPE(Info, INFO_NTP);
 	}
-	else if (Tranverse16(Info->protocol1.Udp.sourcePort) == 1900 || Tranverse16(Info->protocol1.Udp.destinationPort) == 1900)
+	else if (Tranverse16(Info->Osi.protocol1.Udp.sourcePort) == 1900 || Tranverse16(Info->Osi.protocol1.Udp.destinationPort) == 1900)
 	{
 		SET_INFO_TYPE(Info, INFO_SSDPv4);
 	}
 }
 void AnalyseIcmp(PPacketInfo Info, int IpHeaderLen)
 {
-	memcpy(&Info->protocol1.Icmp, Info->RawPacket + sizeof(MAC) + IpHeaderLen, sizeof(ICMPPacket));
+	//memcpy(&Info->Osi.protocol1.Icmp, Info->RawPacket + sizeof(MAC) + IpHeaderLen, sizeof(ICMPPacket));
 }
 void AnalyseArp(PPacketInfo Info)
 {
-	memcpy(&Info->protocol.Arp, Info->RawPacket + sizeof(MAC), sizeof(ARPPacket));
+	//memcpy(&Info->Osi.protocol.Arp, Info->RawPacket + sizeof(MAC), sizeof(ARPPacket));
 	/*printf("**************ARP**********\n");
 	if (Tranverse16(Info->protocol.Arp.opcode) == ARP_REQUEST)
 	{
@@ -66,17 +66,17 @@ void AnalyseArp(PPacketInfo Info)
 }
 void AnalyseTcp(PPacketInfo Info,int IpHeaderLen)
 {
-	memcpy(&Info->protocol1.Tcp, Info->RawPacket + sizeof(MAC) + IpHeaderLen, sizeof(TCPPacket));
-	if ((Tranverse16(Info->protocol1.Tcp.sourcePort) == 80) | (Tranverse16(Info->protocol1.Tcp.destinationPort) == 80))
+	//memcpy(&Info->Osi.protocol1.Tcp, Info->RawPacket + sizeof(MAC) + IpHeaderLen, sizeof(TCPPacket));
+	if ((Tranverse16(Info->Osi.protocol1.Tcp.sourcePort) == 80) | (Tranverse16(Info->Osi.protocol1.Tcp.destinationPort) == 80))
 	{
 		SET_INFO_TYPE(Info, INFO_HTTP);
 	}
 }
 void AnalyseIp(PPacketInfo Info)
 {
-	memcpy(&Info->protocol.Ip, Info->RawPacket + sizeof(MAC), sizeof(IPPacket));
-	int IpHeaderLen = (Info->protocol.Ip.iphVerLen & 0x0f) * 4;    //1=4个字节
-	switch (Info->protocol.Ip.ipProtocol)
+	//memcpy(&Info->Osi.protocol.Ip, Info->RawPacket + sizeof(MAC), sizeof(IPPacket));
+	int IpHeaderLen = (Info->Osi.protocol.Ip.iphVerLen & 0x0f) * 4;    //1=4个字节
+	switch (Info->Osi.protocol.Ip.ipProtocol)
 	{
 	case PACKET_TCP:
 		SET_INFO_TYPE(Info, INFO_TCP);
@@ -107,9 +107,9 @@ RAWPACKETANALYSIS_API int AnalysePacket(PIO_Packet Packet,PPacketInfo Info)
 	}
 	Info->Size = Packet->Packet.Net_Packet_Output.Size;
 	Info->IsSendPacket = Packet->Packet.Net_Packet_Output.IsSendPacket;
-	memcpy(Info->RawPacket, Packet->Packet.Net_Packet_Output.Buffer, sizeof(Info->RawPacket));
-	memcpy(&Info->Mac, Info->RawPacket, sizeof(Info->Mac));
-	switch (Tranverse16(Info->Mac.type))
+	memcpy(Info->RawPacket, Packet->Packet.Net_Packet_Output.Buffer, sizeof(Packet->Packet.Net_Packet_Output.Buffer));
+	//memcpy(&Info->Mac, Info->RawPacket, sizeof(Info->Mac));
+	switch (Tranverse16(Info->Osi.Mac.type))
 	{
 	case PACKET_IP:
 		AnalyseIp(Info);

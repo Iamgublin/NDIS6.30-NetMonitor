@@ -9,6 +9,7 @@
 #include "Struct.h"
 int ZlzCalcBufSizeOrCopy(PS_PACKET Packet, PNET_BUFFER_LIST Nbl, int num, int MdlNum)   //调用两次该函数，第一次获取MDL数目，分配内存，第二次拷贝地址。
 {
+	//调用两次该函数，第一次获取MDL数目，分配内存，第二次拷贝地址。
 	PNET_BUFFER_LIST nbltemp = Nbl;
 	PNET_BUFFER nb = NULL;
 	int TempNum = 0;

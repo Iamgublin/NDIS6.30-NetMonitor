@@ -16,9 +16,9 @@ void InitListInfo(PacketInfo Info, ListViewInfo *ListViewInfo)
 	}
 	if (Info.Type == INFO_ARP)
 	{
-		UCHAR* saddr = Info.protocol.Arp.saddr;
-		UCHAR* daddr = Info.protocol.Arp.daddr;
-		if ((Info.Mac.dst[0] == 0xff) || (Info.Mac.dst[1] == 0xff))
+		UCHAR* saddr = Info.Osi.protocol.Arp.saddr;
+		UCHAR* daddr = Info.Osi.protocol.Arp.daddr;
+		if ((Info.Osi.Mac.dst[0] == 0xff) || (Info.Osi.Mac.dst[1] == 0xff))
 		{
 			sprintf_s(ListViewInfo->SourceIp, "%03d.%03d.%03d.%03d", saddr[0], saddr[1], saddr[2], saddr[3]);
 			sprintf_s(ListViewInfo->DestIp, "BOARDCAST");
@@ -32,41 +32,41 @@ void InitListInfo(PacketInfo Info, ListViewInfo *ListViewInfo)
 			sprintf_s(ListViewInfo->DataLength, "%4d", Info.Size);
 			sprintf_s(ListViewInfo->ProtocolType, "%s", pro[Info.Type]);
 		}
-		if (Tranverse16(Info.protocol.Arp.opcode) == ARP_REQUEST)
+		if (Tranverse16(Info.Osi.protocol.Arp.opcode) == ARP_REQUEST)
 		{
-			sprintf_s(ListViewInfo->Information, "who has ip %03d.%03d.%03d.%03d? tell %03d.%03d.%03d.%03d\n", Info.protocol.Arp.daddr[0],
-				Info.protocol.Arp.daddr[1], Info.protocol.Arp.daddr[2], Info.protocol.Arp.daddr[3], Info.protocol.Arp.saddr[0],
-				Info.protocol.Arp.saddr[1], Info.protocol.Arp.saddr[2], Info.protocol.Arp.saddr[3]);
+			sprintf_s(ListViewInfo->Information, "who has ip %03d.%03d.%03d.%03d? tell %03d.%03d.%03d.%03d\n", Info.Osi.protocol.Arp.daddr[0],
+				Info.Osi.protocol.Arp.daddr[1], Info.Osi.protocol.Arp.daddr[2], Info.Osi.protocol.Arp.daddr[3], Info.Osi.protocol.Arp.saddr[0],
+				Info.Osi.protocol.Arp.saddr[1], Info.Osi.protocol.Arp.saddr[2], Info.Osi.protocol.Arp.saddr[3]);
 		}
-		else if (Tranverse16(Info.protocol.Arp.opcode) == ARP_REPLY)
+		else if (Tranverse16(Info.Osi.protocol.Arp.opcode) == ARP_REPLY)
 		{
-			sprintf_s(ListViewInfo->Information, "%03d.%03d.%03d.%03d is in mac %02x-%02x-%02x-%02x-%02x-%02x\n", Info.protocol.Arp.saddr[0], Info.protocol.Arp.saddr[1],
-				Info.protocol.Arp.saddr[2], Info.protocol.Arp.saddr[3], Info.protocol.Arp.smac[0], Info.protocol.Arp.smac[1],
-				Info.protocol.Arp.smac[2], Info.protocol.Arp.smac[3], Info.protocol.Arp.smac[4], Info.protocol.Arp.smac[5]);
+			sprintf_s(ListViewInfo->Information, "%03d.%03d.%03d.%03d is in mac %02x-%02x-%02x-%02x-%02x-%02x\n", Info.Osi.protocol.Arp.saddr[0], Info.Osi.protocol.Arp.saddr[1],
+				Info.Osi.protocol.Arp.saddr[2], Info.Osi.protocol.Arp.saddr[3], Info.Osi.protocol.Arp.smac[0], Info.Osi.protocol.Arp.smac[1],
+				Info.Osi.protocol.Arp.smac[2], Info.Osi.protocol.Arp.smac[3], Info.Osi.protocol.Arp.smac[4], Info.Osi.protocol.Arp.smac[5]);
 		}
 	}
 	else
 	{
-		UCHAR* saddr = Info.protocol.Ip.ipSource;
-		UCHAR* daddr = Info.protocol.Ip.ipDestination;
+		UCHAR* saddr = Info.Osi.protocol.Ip.ipSource;
+		UCHAR* daddr = Info.Osi.protocol.Ip.ipDestination;
 		sprintf_s(ListViewInfo->SourceIp, "%03d.%03d.%03d.%03d", saddr[0], saddr[1], saddr[2], saddr[3]);
 		sprintf_s(ListViewInfo->DestIp, "%03d.%03d.%03d.%03d", daddr[0], daddr[1], daddr[2], daddr[3]);
 		sprintf_s(ListViewInfo->DataLength, "%4d", Info.Size);
 		sprintf_s(ListViewInfo->ProtocolType, "%s", pro[Info.Type]);
 		if (Info.Type == INFO_TCP)
 		{
-			sprintf_s(ListViewInfo->Information, "window:%5d port:%d->%d ack:%d syn:%d fin:%d dataoffset:%d\n", Tranverse16(Info.protocol1.Tcp.windows), Tranverse16(Info.protocol1.Tcp.sourcePort), Tranverse16(Info.protocol1.Tcp.destinationPort), TCP_TEST_ACK(Info.protocol1.Tcp.flagsOffset),
-				TCP_TEST_SYN(Info.protocol1.Tcp.flagsOffset), TCP_TEST_FIN(Info.protocol1.Tcp.flagsOffset), (TCP_GETDATAOFFSET(Info.protocol1.Tcp.flagsOffset)) * 4);
+			sprintf_s(ListViewInfo->Information, "window:%5d port:%d->%d ack:%d syn:%d fin:%d dataoffset:%d\n", Tranverse16(Info.Osi.protocol1.Tcp.windows), Tranverse16(Info.Osi.protocol1.Tcp.sourcePort), Tranverse16(Info.Osi.protocol1.Tcp.destinationPort), TCP_TEST_ACK(Info.Osi.protocol1.Tcp.flagsOffset),
+				TCP_TEST_SYN(Info.Osi.protocol1.Tcp.flagsOffset), TCP_TEST_FIN(Info.Osi.protocol1.Tcp.flagsOffset), (TCP_GETDATAOFFSET(Info.Osi.protocol1.Tcp.flagsOffset)) * 4);
 		}
 		else if (Info.Type == INFO_ICMP)
 		{
-			sprintf_s(ListViewInfo->Information, "type:%02d code:%02d checksum:%d\n", Info.protocol1.Icmp.icmp_type, Info.protocol1.Icmp.icmp_code, Info.protocol1.Icmp.icmp_checksum);
+			sprintf_s(ListViewInfo->Information, "type:%02d code:%02d checksum:%d\n", Info.Osi.protocol1.Icmp.icmp_type, Info.Osi.protocol1.Icmp.icmp_code, Info.Osi.protocol1.Icmp.icmp_checksum);
 		}
 		else if (Info.Type == INFO_HTTP)
 		{
 			/*char http[60] = { 0 };
-			int len = sizeof(MAC) + (Info.protocol.Ip.iphVerLen & 0x0f) * 4 + (TCP_GETDATAOFFSET(Info.protocol1.Tcp.flagsOffset) * 4)+1;
-			memcpy(http, Info.RawPacket + len, sizeof(http)-1);
+			int len = sizeof(MAC) + (Info.Osi.protocol.Ip.iphVerLen & 0x0f) * 4 + (TCP_GETDATAOFFSET(Info.Osi.protocol1.Tcp.flagsOffset) * 4)+1;
+			memcpy(http, Info.Osi.RawPacket + len, sizeof(http)-1);
 			for (int i = 0; i < 60; i++)
 			{
 			printf("%c", http[i]);
@@ -75,19 +75,19 @@ void InitListInfo(PacketInfo Info, ListViewInfo *ListViewInfo)
 		}
 		else if (Info.Type == INFO_UDP)
 		{
-			sprintf_s(ListViewInfo->Information, "port:%d->%d\n", Tranverse16(Info.protocol1.Udp.sourcePort), Tranverse16(Info.protocol1.Udp.destinationPort));
+			sprintf_s(ListViewInfo->Information, "port:%d->%d\n", Tranverse16(Info.Osi.protocol1.Udp.sourcePort), Tranverse16(Info.Osi.protocol1.Udp.destinationPort));
 		}
 		else if (Info.Type == INFO_SSDPv4)
 		{
-			int len = sizeof(MAC) + (Info.protocol.Ip.iphVerLen & 0x0f) * 4 + sizeof(UDPPacket);
+			int len = sizeof(MAC) + (Info.Osi.protocol.Ip.iphVerLen & 0x0f) * 4 + sizeof(UDPPacket);
 			/*for (int i = len; i < len + 30; i++)
 			{
-			if (Info.RawPacket[i] == '\n')
+			if (Info.Osi.RawPacket[i] == '\n')
 			{
 			printf("\t");
 			continue;
 			}
-			printf("%c", Info.RawPacket[i]);
+			printf("%c", Info.Osi.RawPacket[i]);
 			}
 			printf("\n");*/
 			memcpy(ListViewInfo->Information, &Info.RawPacket[len], 30);
@@ -117,15 +117,15 @@ VOID CALLBACK GetRawPacket(HWND hwnd, UINT msg, UINT_PTR timeid, DWORD systemtim
 	}
 	InitListInfo(Info, &ListViewInfo);
 	ChangeListInfoMap(CurrentNum, Info, FALSE);
-	if (Info.Type == INFO_ARP && Tranverse16(Info.protocol.Arp.opcode) == ARP_REPLY)
+	if (Info.Type == INFO_ARP && Tranverse16(Info.Osi.protocol.Arp.opcode) == ARP_REPLY)
 	{
 		vector<UCHAR> Iptemp;
 		vector<UCHAR> Mactemp;
-		for (UCHAR temp : Info.protocol.Arp.saddr)
+		for (UCHAR temp : Info.Osi.protocol.Arp.saddr)
 		{
 			Iptemp.push_back(temp);
 		}
-		for (UCHAR temp : Info.protocol.Arp.smac)
+		for (UCHAR temp : Info.Osi.protocol.Arp.smac)
 		{
 			Mactemp.push_back(temp);
 		}
@@ -206,11 +206,11 @@ void ShowOutput(LPNMLISTVIEW Mlv)
 		char buf[255] = { 0 };
 		char* point = buf;
 		PacketInfo Info = ListInfo[trueindex];
-		PUCHAR Mac = Info.Mac.sou;
+		PUCHAR Mac = Info.Osi.Mac.sou;
 		sprintf(point, "Source Mac Address:%02x-%02x-%02x-%02x-%02x-%02x\n", Mac[0], Mac[1], Mac[2], Mac[3],
 			Mac[4], Mac[5]);
 		point = buf + strlen(buf);
-		Mac = Info.Mac.dst;
+		Mac = Info.Osi.Mac.dst;
 		sprintf(point, "Dest Mac Address:%02x-%02x-%02x-%02x-%02x-%02x\n", Mac[0], Mac[1], Mac[2], Mac[3],
 			Mac[4], Mac[5]);
 		SetWindowText(StaticWindow, buf);
@@ -242,6 +242,7 @@ void AddListView(PListViewInfo Info)
 void DeleteAllListInfo()
 {
 	ListView_DeleteAllItems(ListView);
+	ListInfo.clear();
 	CurrentNum = 0;
 }
 void Refresh()
@@ -551,12 +552,12 @@ void ShowMoreInformation(HWND hDlg,int Index)
 	PacketInfo Packet = ListInfo[Index];
 	if (Packet.Type == INFO_ICMP)
 	{
-		sprintf(Output, "Checksum:%d\r\ncode:%d\r\nid:%d\r\ntype:%d\r\n", Packet.protocol1.Icmp.icmp_checksum,
-			Packet.protocol1.Icmp.icmp_code, Packet.protocol1.Icmp.icmp_id, Packet.protocol1.Icmp.icmp_type);
+		sprintf(Output, "Checksum:%d\r\ncode:%d\r\nid:%d\r\ntype:%d\r\n", Packet.Osi.protocol1.Icmp.icmp_checksum,
+			Packet.Osi.protocol1.Icmp.icmp_code, Packet.Osi.protocol1.Icmp.icmp_id, Packet.Osi.protocol1.Icmp.icmp_type);
 	}
 	else if (Packet.Type == INFO_TCP)
 	{
-		TCPPacket *Tcp = &Packet.protocol1.Tcp;
+		TCPPacket *Tcp = &Packet.Osi.protocol1.Tcp;
 		sprintf(Output, "acknowledgeNumber:%d\r\nchecksum:%d\r\nsourceport:%d\r\n"
 			"destinationport:%d\r\nwindows:%d\r\n", Tcp->acknowledgeNumber, Tcp->checksum,
 			Tcp->sourcePort,Tcp->destinationPort,Tcp->windows);

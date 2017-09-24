@@ -43,23 +43,29 @@ typedef struct _PacketInfo
 	int Type;     //数据包类型 （INFO_XXX）
 	int Size;     //数据包大小
 	BOOLEAN IsSendPacket;
-	MAC Mac;      //数据链路层
-	union 
+	union
 	{
-		IPPacket Ip;
-		ARPPacket Arp;
-	}protocol;    //网络层
-	union 
-	{
-		TCPPacket Tcp;
-		UDPPacket Udp;
-		ICMPPacket Icmp;
-		IGMPPacket Igmp;
-	}protocol1;  //传输层
-	union 
-	{
-		QICQPacket Qicq;
-		DHCPPacket Dhcp;
-	}protocol2;
-	UCHAR RawPacket[2000];     //原始的包数据（MTU<=1500）
+		struct
+		{
+			MAC Mac;      //数据链路层
+			union
+			{
+				IPPacket Ip;
+				ARPPacket Arp;
+			}protocol;    //网络层
+			union
+			{
+				TCPPacket Tcp;
+				UDPPacket Udp;
+				ICMPPacket Icmp;
+				IGMPPacket Igmp;
+			}protocol1;  //传输层
+			union
+			{
+				QICQPacket Qicq;
+				DHCPPacket Dhcp;
+			}protocol2;
+		}Osi;
+		UCHAR RawPacket[2000];     //原始的包数据（MTU<=1500）
+	};
 }PacketInfo,*PPacketInfo;

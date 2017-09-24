@@ -18,7 +18,7 @@ CatalogFile     = netlwf.cat
 Provider        = %ProviderString%
 
 ; TODO: Customize this string for the driver version
-DriverVer=05/21/2017,14.56.56.347
+DriverVer=09/24/2017,11.8.48.164
 
 
 ; TODO: Include each architecture for which your driver package contains a

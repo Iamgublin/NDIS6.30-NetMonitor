@@ -3,6 +3,7 @@
 #pragma warning(disable:4100)
 #define NDIS_WDM
 #define NDIS630
+#include<ntddk.h>
 #include<wdm.h>
 #include<ndis.h>
 #include<ntstrsafe.h>

@@ -135,10 +135,15 @@ NTSTATUS CopyNetBuffer(PIO_Packet Packet, int i)
 				return STATUS_UNSUCCESSFUL;
 			}
 			int size = MmGetMdlByteCount(MdlUsed);
+			
 			if (TotalSize + size > IO_BUF)
 			{
 				DbgPrint("Buf is too small!\n");
 				break;
+			}
+			if (MmIsAddressValid(Buf))   //有时候Mdl的SystemVa不正确，导致蓝屏，在这里进行检测
+			{
+				continue;
 			}
 			RtlCopyMemory(&Packet->Packet.Net_Packet_Output.Buffer[TotalSize], Buf, size);
 			MdlHasCopied++;
