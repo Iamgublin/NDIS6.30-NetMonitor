@@ -71,9 +71,9 @@ int main()
 			}
 			if (Info.Type == INFO_ARP)
 			{
-				UCHAR* saddr = Info.protocol.Arp.saddr;
-				UCHAR* daddr = Info.protocol.Arp.daddr;
-				if ((Info.Mac.dst[0] == 0xff) || (Info.Mac.dst[1] == 0xff))
+				UCHAR* saddr = Info.Osi.protocol.Arp.saddr;
+				UCHAR* daddr = Info.Osi.protocol.Arp.daddr;
+				if ((Info.Osi.Mac.dst[0] == 0xff) || (Info.Osi.Mac.dst[1] == 0xff))
 				{
 					printf("%03d.%03d.%03d.%03d\tBOARDCAST\t%4d\t%5s\t", saddr[0], saddr[1], saddr[2], saddr[3],Info.Size, pro[Info.Type]);
 				}
@@ -81,32 +81,32 @@ int main()
 				{
 					printf("%03d.%03d.%03d.%03d\t%03d.%03d.%03d.%03d\t%4d\t%5s\t", saddr[0], saddr[1], saddr[2], saddr[3], daddr[0], daddr[1], daddr[2], daddr[3], Info.Size, pro[Info.Type]);
 				}
-				if (Tranverse16(Info.protocol.Arp.opcode) == ARP_REQUEST)
+				if (Tranverse16(Info.Osi.protocol.Arp.opcode) == ARP_REQUEST)
 				{
-					printf("who has ip %03d.%03d.%03d.%03d? tell %03d.%03d.%03d.%03d\n", Info.protocol.Arp.daddr[0],
-						Info.protocol.Arp.daddr[1], Info.protocol.Arp.daddr[2], Info.protocol.Arp.daddr[3], Info.protocol.Arp.saddr[0],
-						Info.protocol.Arp.saddr[1], Info.protocol.Arp.saddr[2], Info.protocol.Arp.saddr[3]);
+					printf("who has ip %03d.%03d.%03d.%03d? tell %03d.%03d.%03d.%03d\n", Info.Osi.protocol.Arp.daddr[0],
+						Info.Osi.protocol.Arp.daddr[1], Info.Osi.protocol.Arp.daddr[2], Info.Osi.protocol.Arp.daddr[3], Info.Osi.protocol.Arp.saddr[0],
+						Info.Osi.protocol.Arp.saddr[1], Info.Osi.protocol.Arp.saddr[2], Info.Osi.protocol.Arp.saddr[3]);
 				}
-				else if (Tranverse16(Info.protocol.Arp.opcode) == ARP_REPLY)
+				else if (Tranverse16(Info.Osi.protocol.Arp.opcode) == ARP_REPLY)
 				{
-					printf("%03d.%03d.%03d.%03d is in mac %02x-%02x-%02x-%02x-%02x-%02x\n", Info.protocol.Arp.saddr[0], Info.protocol.Arp.saddr[1],
-						Info.protocol.Arp.saddr[2], Info.protocol.Arp.saddr[3], Info.protocol.Arp.smac[0], Info.protocol.Arp.smac[1],
-						Info.protocol.Arp.smac[2], Info.protocol.Arp.smac[3], Info.protocol.Arp.smac[4], Info.protocol.Arp.smac[5]);
+					printf("%03d.%03d.%03d.%03d is in mac %02x-%02x-%02x-%02x-%02x-%02x\n", Info.Osi.protocol.Arp.saddr[0], Info.Osi.protocol.Arp.saddr[1],
+						Info.Osi.protocol.Arp.saddr[2], Info.Osi.protocol.Arp.saddr[3], Info.Osi.protocol.Arp.smac[0], Info.Osi.protocol.Arp.smac[1],
+						Info.Osi.protocol.Arp.smac[2], Info.Osi.protocol.Arp.smac[3], Info.Osi.protocol.Arp.smac[4], Info.Osi.protocol.Arp.smac[5]);
 				}
 			}
 			else
 			{
-				UCHAR* saddr = Info.protocol.Ip.ipSource;
-				UCHAR* daddr = Info.protocol.Ip.ipDestination;
+				UCHAR* saddr = Info.Osi.protocol.Ip.ipSource;
+				UCHAR* daddr = Info.Osi.protocol.Ip.ipDestination;
 				printf("%03d.%03d.%03d.%03d\t%03d.%03d.%03d.%03d\t%4d\t%5s\t", saddr[0], saddr[1], saddr[2], saddr[3], daddr[0], daddr[1], daddr[2], daddr[3], Info.Size, pro[Info.Type]);
 				if (Info.Type == INFO_TCP)
 				{
-					printf("window:%5d port:%d->%d ack:%d syn:%d fin:%d dataoffset:%d\n", Tranverse16(Info.protocol1.Tcp.windows), Tranverse16(Info.protocol1.Tcp.sourcePort), Tranverse16(Info.protocol1.Tcp.destinationPort), TCP_TEST_ACK(Info.protocol1.Tcp.flagsOffset),
-					TCP_TEST_SYN(Info.protocol1.Tcp.flagsOffset), TCP_TEST_FIN(Info.protocol1.Tcp.flagsOffset),(TCP_GETDATAOFFSET(Info.protocol1.Tcp.flagsOffset))*4);
+					printf("window:%5d port:%d->%d ack:%d syn:%d fin:%d dataoffset:%d\n", Tranverse16(Info.Osi.protocol1.Tcp.windows), Tranverse16(Info.Osi.protocol1.Tcp.sourcePort), Tranverse16(Info.Osi.protocol1.Tcp.destinationPort), TCP_TEST_ACK(Info.Osi.protocol1.Tcp.flagsOffset),
+					TCP_TEST_SYN(Info.Osi.protocol1.Tcp.flagsOffset), TCP_TEST_FIN(Info.Osi.protocol1.Tcp.flagsOffset),(TCP_GETDATAOFFSET(Info.Osi.protocol1.Tcp.flagsOffset))*4);
 				}
 				else if (Info.Type == INFO_ICMP)
 				{
-					printf("type:%02d code:%02d checksum:%d\n", Info.protocol1.Icmp.icmp_type, Info.protocol1.Icmp.icmp_code, Info.protocol1.Icmp.icmp_checksum);
+					printf("type:%02d code:%02d checksum:%d\n", Info.Osi.protocol1.Icmp.icmp_type, Info.Osi.protocol1.Icmp.icmp_code, Info.Osi.protocol1.Icmp.icmp_checksum);
 				}
 				else if (Info.Type == INFO_HTTP)
 				{
@@ -121,11 +121,11 @@ int main()
 				}
 				else if (Info.Type == INFO_UDP)
 				{
-					printf("port:%d->%d\n", Tranverse16(Info.protocol1.Udp.sourcePort), Tranverse16(Info.protocol1.Udp.destinationPort));
+					printf("port:%d->%d\n", Tranverse16(Info.Osi.protocol1.Udp.sourcePort), Tranverse16(Info.Osi.protocol1.Udp.destinationPort));
 				}
 				else if (Info.Type == INFO_SSDPv4)
 				{
-					int len = sizeof(MAC) + (Info.protocol.Ip.iphVerLen & 0x0f) * 4 + sizeof(UDPPacket);
+					int len = sizeof(MAC) + (Info.Osi.protocol.Ip.iphVerLen & 0x0f) * 4 + sizeof(UDPPacket);
 					for (int i = len; i < len + 30; i++)
 					{
 						if (Info.RawPacket[i] == '\n')
