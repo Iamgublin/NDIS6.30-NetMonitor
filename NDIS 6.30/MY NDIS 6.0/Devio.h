@@ -141,7 +141,7 @@ NTSTATUS CopyNetBuffer(PIO_Packet Packet, int i)
 				DbgPrint("Buf is too small!\n");
 				break;
 			}
-			if (MmIsAddressValid(Buf))   //有时候Mdl的SystemVa不正确，导致蓝屏，在这里进行检测
+			if (!MmIsAddressValid(Buf))   //有时候Mdl的SystemVa不正确，导致蓝屏，在这里进行检测
 			{
 				continue;
 			}
