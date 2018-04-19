@@ -250,19 +250,19 @@ NDIS_STATUS FilterAttach(
 	context->FilterHandle = NdisFilterHandle;
 	context->CurrentRecvNum = 0;
 	context->IsFiltering = FALSE;               //看情况修改
-	for (int contextinsert = 0; contextinsert < 20; contextinsert++)
-	{
-		if (Global.context[contextinsert] == NULL)
-		{
-			Global.context[contextinsert] = context;     //寻找空位置插入
-			context->FliterIndex = contextinsert;
-			break;
-		}
-		if (contextinsert == 19)
-		{
-			return STATUS_UNSUCCESSFUL;     //超过20个限制
-		}
-	}
+    for (int contextinsert = 0; contextinsert < NETCARD_DEFAULT_MAX; contextinsert++)
+    {
+        if (Global.context[contextinsert] == NULL)
+        {
+            Global.context[contextinsert] = context;     //寻找空位置插入
+            context->FliterIndex = contextinsert;
+            break;
+        }
+        if (contextinsert == NETCARD_DEFAULT_MAX - 1)
+        {
+            return STATUS_UNSUCCESSFUL;     //超过20个限制
+        }
+    }
 	Global.contextnum++;
 	return STATUS_SUCCESS;
 }

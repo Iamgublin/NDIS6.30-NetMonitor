@@ -33,7 +33,7 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING str)
 	Global.contextnum = 0;
 	Global.DriverHandle = NULL;
 	Global.FilterDev = NULL;
-	Global.RecvPoolMax = 500;   //默认包池大小
+	Global.RecvPoolMax = PACKET_DEFAULT_MAX;   //默认包池大小
 
 	driver->DriverUnload = Unload;
 	devcon = driver->MajorFunction[IRP_MJ_DEVICE_CONTROL];

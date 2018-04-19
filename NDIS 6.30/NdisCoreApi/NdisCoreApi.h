@@ -70,4 +70,12 @@ Net_SendRawPacket(
 	_In_ int SendSize,
 	_In_ int AdapterIndex
 );
+
+NDISCOREAPI_API
+int
+WINAPI
+Net_SetPacketPoolMax(
+    _In_ HANDLE FilterHandle,
+    _In_ int PoolMax
+);
 #endif //_APICORENDIS_

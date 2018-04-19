@@ -30,9 +30,14 @@
 #define IOCTL_STARTFILTER (ULONG)CTL_CODE(FILE_DEVICE_UNKNOWN,0x913,METHOD_BUFFERED,FILE_WRITE_DATA|FILE_READ_DATA)
 #define IOCTL_STOPFILTER (ULONG)CTL_CODE(FILE_DEVICE_UNKNOWN,0x914,METHOD_BUFFERED,FILE_WRITE_DATA|FILE_READ_DATA)
 #define IOCTL_SENDPACKET (ULONG)CTL_CODE(FILE_DEVICE_UNKNOWN,0x915,METHOD_BUFFERED,FILE_WRITE_DATA|FILE_READ_DATA)
+#define IOCTL_SETPACKPOOLMAX (ULONG)CTL_CODE(FILE_DEVICE_UNKNOWN,0x916,METHOD_BUFFERED,FILE_WRITE_DATA|FILE_READ_DATA)
 
 #define PACKET_TYPE_ADAPTERINFO 1
 #define PACKET_TYPE_NETPACKET 2
+
+#define PACKET_DEFAULT_MAX   500
+
+#define NETCARD_DEFAULT_MAX  20
 
 PDRIVER_DISPATCH devcon;
 typedef struct _AdapterInfo
@@ -42,6 +47,7 @@ typedef struct _AdapterInfo
 	WCHAR DevName[PATH_MAX];
 	UCHAR MacAddress[32];
 }AdapterInfo, *PAdapterInfo;
+
 typedef struct _IO_Packet                  //r0 r3 I/O用
 {
 	int Type;
@@ -66,9 +72,14 @@ typedef struct _IO_Packet                  //r0 r3 I/O用
 		{
 			int Index;
 		}Net_StartStop_Filter;
+        struct
+        {
+            int PoolMax;
+        }Set_PoolMax;
 		unsigned u;
 	}Packet;
-}IO_Packet,*PIO_Packet;
+}IO_Packet, *PIO_Packet;
+
 typedef struct _S_PACKET
 {
 	LIST_ENTRY PacketList;
@@ -78,12 +89,14 @@ typedef struct _S_PACKET
 	PNET_BUFFER_LIST buffer;                    //解链以后的NBL
 	PMDL *mdllist;
 }S_PACKET, *PS_PACKET;
+
 typedef struct _DEVINCE_INFO
 {
 	NDIS_STRING DevPathName;                    //设备路径名
 	NDIS_STRING DevName;                        //设备名字
 	UCHAR MacAddress[32];                       //Mac地址
 }DEVICE_INFO,*PDEVINCE_INFO;
+
 typedef struct _FILTER_CONTEXT
 {
 	char magic[8];
@@ -97,14 +110,15 @@ typedef struct _FILTER_CONTEXT
 	LIST_ENTRY PacketRecvList;                  //接收链表
 	KSPIN_LOCK NetBufferListLock;               //链表同步访问锁
 }FILTER_CONTEXT, *PFILTER_CONTEXT;
+
 typedef struct _GLOBAL
 {
-	NDIS_HANDLE DriverHandle;          //注册过滤设备后获得的句柄
-	int contextnum;                    //绑定设备数
-	PFILTER_CONTEXT context[20];       //绑定设备上下文
-	PDEVICE_OBJECT FilterDev;          //R3 R0 I/O传输设备
-	UNICODE_STRING symname;            //链接符号名
-	int RecvPoolMax;                   //包池最大大小
+	NDIS_HANDLE DriverHandle;                           //注册过滤设备后获得的句柄
+	int contextnum;                                     //绑定设备数
+	PFILTER_CONTEXT context[NETCARD_DEFAULT_MAX];       //绑定设备上下文
+	PDEVICE_OBJECT FilterDev;                           //R3 R0 I/O传输设备
+	UNICODE_STRING symname;                             //链接符号名
+	int RecvPoolMax;                                    //包池最大大小
 }GLOBAL, *PGLOBAL;
 GLOBAL Global;
 

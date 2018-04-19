@@ -328,6 +328,15 @@ NTSTATUS MyDeviceIoControl(PDEVICE_OBJECT dev, PIRP irp)
 			}
 			IoCompleteRequest(irp, IO_NO_INCREMENT);
 			break;
+        case IOCTL_SETPACKPOOLMAX:
+            if (sa->Parameters.DeviceIoControl.InputBufferLength)
+            {
+                PIO_Packet PacketInput = (PIO_Packet)irp->AssociatedIrp.SystemBuffer;
+                //这里存在原子访问的问题，有可能需要等到下次收到包才能生效
+                Global.RecvPoolMax = PacketInput->Packet.Set_PoolMax.PoolMax;
+            }
+            IoCompleteRequest(irp, IO_NO_INCREMENT);
+            break;
 		default:
 			break;
 		}

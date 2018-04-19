@@ -97,3 +97,15 @@ Net_SendRawPacket(
 	RawPacketToSend->Reserved1 = size;
 	return DeviceIoControl(FilterHandle, IOCTL_SENDPACKET, RawPacketToSend, sizeof(RawPacket), NULL, NULL, &ByteRet, NULL);
 }
+NDISCOREAPI_API
+int
+WINAPI
+Net_SetPacketPoolMax(
+    _In_ HANDLE FilterHandle,
+    _In_ int PoolMax)
+{
+    DWORD ByteRet = 0;
+    IO_Packet PacketInput = { 0 };
+    PacketInput.Packet.Set_PoolMax.PoolMax = PoolMax;
+    return DeviceIoControl(FilterHandle, IOCTL_SETPACKPOOLMAX, &PacketInput, sizeof(IO_Packet), NULL, NULL, &ByteRet, NULL);
+}
