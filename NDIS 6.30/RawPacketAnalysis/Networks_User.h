@@ -83,16 +83,19 @@ typedef struct _ARPPacket //28字节的ARP头
 typedef struct _DNSPacket 
 {
 	USHORT id; //标识，通过它客户端可以将DNS的请求与应答相匹配；
-    struct 
+    struct
     {
-        UCHAR queryorres : 1;
-        UCHAR opcode : 4;
-        UCHAR authoritativeanswer : 1;
-        UCHAR truncation : 1;
+        //第一个字节  低位--->高位
         UCHAR recursiondesired : 1;
-        UCHAR recursionavailable : 1;
-        UCHAR reserve : 3;
+        UCHAR truncation : 1;
+        UCHAR authoritativeanswer : 1;
+        UCHAR opcode : 4;
+        UCHAR queryorres : 1;
+
+        //第二个字节  低位--->高位
         UCHAR responsecode : 4;
+        UCHAR reserve : 3;
+        UCHAR recursionavailable : 1;
     }flags;
 	USHORT questions; //问题数目
 	USHORT answers; //资源记录数目
