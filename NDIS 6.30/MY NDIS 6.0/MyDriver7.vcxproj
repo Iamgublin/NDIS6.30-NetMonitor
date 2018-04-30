@@ -163,7 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Devio.h" />
-    <ClInclude Include="Networks_Kernel.h" />
     <ClInclude Include="Packetcpy.h" />
     <ClInclude Include="Filter.h" />
     <ClInclude Include="Struct.h" />

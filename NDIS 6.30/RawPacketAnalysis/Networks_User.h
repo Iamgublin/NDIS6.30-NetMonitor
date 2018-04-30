@@ -1,5 +1,5 @@
 #pragma once
-#include<Windows.h>
+#pragma warning(disable:4214)
 
 //用于判断包类型
 #define PACKET_IP   0x0800
@@ -83,7 +83,17 @@ typedef struct _ARPPacket //28字节的ARP头
 typedef struct _DNSPacket 
 {
 	USHORT id; //标识，通过它客户端可以将DNS的请求与应答相匹配；
-	USHORT flags; //标志：(查询)0x0100 (应答)0x8180 这些数字都是主机序
+    struct 
+    {
+        UCHAR queryorres : 1;
+        UCHAR opcode : 4;
+        UCHAR authoritativeanswer : 1;
+        UCHAR truncation : 1;
+        UCHAR recursiondesired : 1;
+        UCHAR recursionavailable : 1;
+        UCHAR reserve : 3;
+        UCHAR responsecode : 4;
+    }flags;
 	USHORT questions; //问题数目
 	USHORT answers; //资源记录数目
 	USHORT author; //授权资源记录数目

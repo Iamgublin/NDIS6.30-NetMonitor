@@ -1,5 +1,5 @@
 #include"ControlApi.h"
-#include<IPHlpApi.h>
+
 #pragma warning(disable:4996)
 void InitListInfo(PacketInfo Info, ListViewInfo *ListViewInfo)
 {
@@ -92,6 +92,52 @@ void InitListInfo(PacketInfo Info, ListViewInfo *ListViewInfo)
 			printf("\n");*/
 			memcpy(ListViewInfo->Information, &Info.RawPacket[len], 30);
 		}
+        else if (Info.Type == INFO_DNS)
+        {
+            string Type;
+            string ErrorCode;
+            if (Info.Osi.protocol2.Dns.flags.queryorres== DNS_REQUEST)
+            {
+                Type = "Request";
+            }
+            else
+            {
+                Type = "Response";
+            }
+
+            switch (Info.Osi.protocol2.Dns.flags.responsecode)
+            {
+            case DNS_STATUS_SUCCESS:
+                ErrorCode = "Success";
+                break;
+
+            case DNS_STATUS_FORMATERROR:
+                ErrorCode = "Format Error";
+                break;
+
+            case DNS_STATUS_NAMEERROR:
+                ErrorCode = "Name Error";
+                break;
+
+            case DNS_STATUS_NOTIMPLEMENTED:
+                ErrorCode = "No Inplemented";
+                break;
+
+            case DNS_STATUS_REFUSED:
+                ErrorCode = "Refused";
+                break;
+
+            case DNS_STATUS_SERVERERROR:
+                ErrorCode = "Server Error";
+                break;
+
+            default:
+                ErrorCode = "Unknown";
+                break;
+            }
+
+            sprintf_s(ListViewInfo->Information, "ID:0x%x  Type:%s  ErrorCode:%s\n", Tranverse16(Info.Osi.protocol2.Dns.id), Type.c_str(), ErrorCode.c_str());
+        }
 		else
 		{
 			sprintf_s(ListViewInfo->Information, "");

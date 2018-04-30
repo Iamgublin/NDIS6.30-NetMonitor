@@ -45,17 +45,18 @@ int ZlzCalcBufSizeOrCopy(PS_PACKET Packet, PNET_BUFFER_LIST Nbl, int num, int Md
 }
 VOID analysis(PS_PACKET Packet)
 {
-	PNET_BUFFER nb = NET_BUFFER_LIST_FIRST_NB(Packet->buffer);
-	PVOID address = MmGetSystemAddressForMdlSafe(nb->MdlChain, IoPriorityNormal);
-	MAC macpacket;
-	RtlCopyMemory(&macpacket, address, sizeof(MAC));
-	DbgPrint("start*********************************\n");
-	DbgPrint("Packet num:%d\n", Packet->MdlNumber);
-	DbgPrint("dest mac:%02x-%02x-%02x-%02x-%02x-%02x\n", macpacket.dst[0], macpacket.dst[1], macpacket.dst[2], macpacket.dst[3], macpacket.dst[4], macpacket.dst[5]);
-	DbgPrint("source mac:%02x-%02x-%02x-%02x-%02x-%02x\n", macpacket.sou[0], macpacket.sou[1], macpacket.sou[2], macpacket.sou[3], macpacket.sou[4], macpacket.sou[5]);
-	DbgPrint("type:%04x\n", Tranverse16(macpacket.type));
-	DbgPrint("%s\n", Packet->IsSendPacket ? "Send" : "Receive");
-	DbgPrint("end*********************************\n");
+    //想看驱动收报信息可以打开这里的调试信息,可能会导致卡顿
+	//PNET_BUFFER nb = NET_BUFFER_LIST_FIRST_NB(Packet->buffer);
+	//PVOID address = MmGetSystemAddressForMdlSafe(nb->MdlChain, IoPriorityNormal);
+	//MAC macpacket;
+	//RtlCopyMemory(&macpacket, address, sizeof(MAC));
+	//DbgPrint("start*********************************\n");
+	//DbgPrint("Packet num:%d\n", Packet->MdlNumber);
+	//DbgPrint("dest mac:%02x-%02x-%02x-%02x-%02x-%02x\n", macpacket.dst[0], macpacket.dst[1], macpacket.dst[2], macpacket.dst[3], macpacket.dst[4], macpacket.dst[5]);
+	//DbgPrint("source mac:%02x-%02x-%02x-%02x-%02x-%02x\n", macpacket.sou[0], macpacket.sou[1], macpacket.sou[2], macpacket.sou[3], macpacket.sou[4], macpacket.sou[5]);
+	//DbgPrint("type:%04x\n", Tranverse16(macpacket.type));
+	//DbgPrint("%s\n", Packet->IsSendPacket ? "Send" : "Receive");
+	//DbgPrint("end*********************************\n");
 }
 /*NTSTATUS ZlzCleanPool(PFILTER_CONTEXT Context)
 {

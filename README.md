@@ -18,3 +18,7 @@
 
 
 2017年9月24日：修改了PacketInfo的结构，与底层的结构统一了，同时修复了一个驱动bug
+
+
+2018年4月30日：修复IP TCP数据不正确的问题，现在可以拦截DNS数据包了
+![DNS解析](https://github.com/Iamgublin/NDIS6.30-NetMonitor/blob/master/NDIS%206.30/DNS解析.png)

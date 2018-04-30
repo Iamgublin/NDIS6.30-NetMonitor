@@ -32,9 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Networks_Kernel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Devio.h">
       <Filter>Header Files</Filter>
     </ClInclude>

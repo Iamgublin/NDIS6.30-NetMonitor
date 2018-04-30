@@ -7,7 +7,7 @@
 #include<wdm.h>
 #include<ndis.h>
 #include<ntstrsafe.h>
-#include"Networks_Kernel.h"
+#include "..\RawPacketAnalysis\Networks_User.h"
 
 #define Tranverse16(X)   ((((UINT16)(X) & 0xff00) >> 8) |(((UINT16)(X) & 0x00ff) << 8))  //用于USHORT大端小端转化
 
