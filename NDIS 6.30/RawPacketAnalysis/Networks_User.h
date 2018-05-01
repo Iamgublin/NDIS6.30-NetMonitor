@@ -121,8 +121,8 @@ typedef struct _DHCPPacket
 	USHORT seconds;
 	struct 
 	{
+        USHORT Reserved : 15;
 		USHORT boardcastFlag : 1;       //是否用广播方式传送
-		USHORT Reserved : 15;
 	}flags;
 	UCHAR clientIpAddress[4];           //自己的地址
 	UCHAR serverIpAddress[4];           //服务器地址
