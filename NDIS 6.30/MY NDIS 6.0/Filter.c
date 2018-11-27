@@ -98,16 +98,18 @@ VOID FilterSendNetBufferListsComplete(
 	PFILTER_CONTEXT context = FilterModuleContext;
 	if (NetBufferLists->Context)
 	{
+        NDIS_HANDLE hPoolHandle = NdisGetPoolFromNetBufferList(NetBufferLists);
 		if (NET_BUFFER_LIST_CONTEXT_DATA_SIZE(NetBufferLists) == sizeof(MY_NET_Buffer_Context))
 		{
 			PMY_NET_Buffer_Context NetContext = (PMY_NET_Buffer_Context)NET_BUFFER_LIST_CONTEXT_DATA_START(NetBufferLists);
-			if (strcmp(NetContext->Magic, "zlz") == 0)
-			{
-				NdisFreeMdl(NetContext->Mdl);
-				NdisFreeMemoryWithTag(NetContext->VirAddress, 'u');
-				NdisFreeNetBufferList(NetBufferLists);
-				return;
-			}
+            if (hPoolHandle == context->NetBufferPool ||
+                strcmp(NetContext->Magic, "zlz") == 0)
+            {
+                NdisFreeMdl(NetContext->Mdl);
+                NdisFreeMemoryWithTag(NetContext->VirAddress, 'u');
+                NdisFreeNetBufferList(NetBufferLists);
+                return;
+            }
 
 		}
 	}
